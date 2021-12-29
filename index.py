@@ -15,9 +15,9 @@ block1 = Entity(position=(3,-1,0),model='cube',color=color.yellow,scale=(3,0.5,3
 block2 = Entity(position=(11,-1,0),model='cube',color=color.yellow,scale=(3,0.5,2), collider='box',texture='brick')
 endGameText = Text(text='Se Fudeu!!!',origin=(0,-2),visible= False,scale=(3,3),color=color.red)
 endGameText2 = Text(text='Aperte enter para recomeçar',origin=(0,0),visible= False,scale=(1,1))
-heli1 = assets.helicopter(13,4)
 
-
+ALL_ENTITIES = []
+ALL_ENTITIES.append(assets.helicopter(13,4))
 
 def update():
     p1.update()
