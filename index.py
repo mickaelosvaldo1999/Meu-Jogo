@@ -20,44 +20,46 @@ ALL_ENTITIES.append(assets.helicopter(15,1.8))
 ALL_ENTITIES.append(assets.helicopter(13,4))
 
 def update():
-    global ALL_ENTITIES
-    p1.update()
-    for i in ALL_ENTITIES:
-        i.update()
-    if p1.colision.hit == False:
-        p1.hitbox.y -= p1.GRAVITY
-        p1.hitbox.color = color.blue
+    global ALL_ENTITIES,endGameText,endGameText2
+    if p1.alive == True:
+        p1.update()
+        for i in ALL_ENTITIES:
+            try:
+                i.update()
+            except:
+                print(f"ERROR: Entity not recognized {i}")
+                break
+        camera.x = p1.hitbox.x
+        camera.y = p1.hitbox.y
+        
+        if p1.veicleSituation == 1:
+            for i in ALL_ENTITIES:
+                if i.use == True:
+                    try:
+                        i.move(p1.hitbox.x,p1.hitbox.y)
+                    except:
+                        print("ERROR: Entity not recognized ",i)
+                        break
+                p1.hitbox.visible = False
+                p1.hitbox.y -= p1.GRAVITY
+                p1.veicleSituation = 1
+                if held_keys['space'] == 1:
+                    p1.hitbox.y += p1.GRAVITY_JUMP
+
+
     else:
-        p1.hitbox.color = color.red
-    if p1.hitbox.y < -4:
-        global endGameText,endGameText2
-        endGameText2.visible = True
+        camera.x = 0
+        camera.y = 0
         endGameText.visible = True
+        endGameText2.visible = True
         if held_keys['enter'] == 1:
             p1.hitbox.x = 0
             p1.hitbox.y = 0
             endGameText.visible = False
             endGameText2.visible = False
-        camera.x = 0
-        camera.y = 0
-    else:
-        camera.x = p1.hitbox.x
-        camera.y = p1.hitbox.y
-    
-    if p1.veicleSituation == 1:
-
-        for i in ALL_ENTITIES:
-            if i.use == True:
-                try:
-                    i.move(p1.hitbox.x,p1.hitbox.y)
-                except:
-                    print("ERROR: Entity not recognized ",i)
-                    break
-        p1.hitbox.visible = False
-        p1.hitbox.y -= p1.GRAVITY
-        p1.veicleSituation = 1
-        if held_keys['space'] == 1:
-            p1.hitbox.y += p1.GRAVITY_JUMP
+            camera.x = 0
+            camera.y = 0
+            p1.alive = True
 
 def input(k):
     global ALL_ENTITIES
@@ -70,7 +72,6 @@ def input(k):
             try:
                 if repr(p1.colision.entities[0].texture) == 'heli.jpg':
                     for i in ALL_ENTITIES:
-                        print(repr(p1.colision.entities[0].x), " = ", i.body.x)
                         if i.body.x == float(repr(p1.colision.entities[0].x)):
                             i.use = True
                             p1.veicleSituation = 1

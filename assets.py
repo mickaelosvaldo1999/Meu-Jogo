@@ -14,16 +14,18 @@ class helicopter:
     self.ligahelice.position = (x,y+1)
 
 class player:
-  def __init__(self,x,y) -> None:
+  def __init__(self,x,y,alive=True) -> None:
     self.hitbox = Entity(position=(x,y,0),model='sphere',color=color.blue,scale =(1,1,1),collider='box')
     self.GRAVITY = 0.09
     self.GRAVITY_JUMP = 2*self.GRAVITY
     self.JUMP_CONTROL = 0
     self.veicleSituation = 0
     self.onBoard = 0
+    self.alive = alive
 
   def jump(self):
     self.JUMP_CONTROL = 40
+  
   
   def update(self):
     self.hitbox.x -= held_keys['a'] * 4*time.dt
@@ -32,3 +34,14 @@ class player:
     if self.JUMP_CONTROL > 0:
       self.hitbox.y += self.GRAVITY_JUMP
       self.JUMP_CONTROL -= 1
+    
+    #GRAVIDADE
+    if self.colision.hit == False:
+        self.hitbox.y -= self.GRAVITY
+        self.hitbox.color = color.blue
+    else:
+        self.hitbox.color = color.red
+    
+    #FIM DO JOGO
+    if self.hitbox.y < -6:
+        self.alive = False
